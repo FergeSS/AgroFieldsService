@@ -1,5 +1,7 @@
 # Agro-Fields-Service
 
+## ER-диаграмма
+![img.png](docs/diagramm.png)
 ## ТЗ, оформленное в XML, корректное относительно DTD
 
 https://drive.google.com/drive/u/2/folders/17T1dHprTmO6PLgx6iELyzmfuGqAupTuV
