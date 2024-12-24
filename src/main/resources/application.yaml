@@ -1,0 +1,27 @@
+server:
+  port: ${SERVER_PORT}
+
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST}:${PORT_DB}/${POSTGRESQL_DATABASE}
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show_sql: true
+  liquibase:
+    enabled: true
+    drop_first: false
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: ${POSTGRES_SCHEMA:public}
+meteo:
+  port: ${METEO_PORT}
+  host: ${METEO_HOST}
+
+springdoc:
+  swagger-ui:
+    path: /docs

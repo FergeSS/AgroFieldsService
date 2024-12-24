@@ -1,0 +1,38 @@
+services:
+  client-backend:
+    container_name: fields-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8002"
+    depends_on:
+      database:
+        condition: service_healthy
+    env_file:
+      - .env
+
+  database:
+    image: bitnami/postgresql:15
+    container_name: fields-db
+    env_file:
+      - .env
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+      - ./db-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U myuser -d mydatabase" ]
+      interval: 2s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  pgdbdata:
+
+networks:
+  default:
+    external:
+      name: agronetwork
+
