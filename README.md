@@ -27,7 +27,7 @@ docker compose up -d --build
 ![img.png](docs/local-profile.png)
 
 6.Настройка БД
-![img.png](docs/DBSettings.png)
+![img.png](docs/DBSettings.jpg)
 
 7. Перейти на Swagger
 
