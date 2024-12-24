@@ -26,7 +26,10 @@ docker compose up -d --build
 Указать профиль local при запуске. Сваггер http://localhost:8080/docs
 ![img.png](docs/local-profile.png)
 
-5. Перейти на Swagger
+6.Настройка БД
+![img.png](docs/DBSettings.png)
+
+7. Перейти на Swagger
 
 Для ручного тестирования необходимо проставить jwt токен в окошко Authorize в сваггере.  
 После этого любой запрос будет содержать токен, который вы вставили.
