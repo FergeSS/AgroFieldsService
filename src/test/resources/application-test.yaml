@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+  jpa:
+    show_sql: true
+
+POSTGRES_SCHEMA: public
+SERVER_PORT: 8080
+METEO_PORT: 8003
+METEO_HOST: meteo-back

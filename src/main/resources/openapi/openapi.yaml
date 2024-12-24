@@ -1,0 +1,914 @@
+openapi: 3.0.3
+info:
+  title: Seasons API
+  version: 2.0.0
+  description: API for managing fields and seasons
+
+paths:
+
+  /api/v2/fields-service/season:
+    post:
+      tags:
+        - Seasons
+      operationId: saveSeason
+      summary: Create a new season
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SeasonBaseDTO'
+      responses:
+        '200':
+          description: Season ID created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    put:
+      tags:
+        - Seasons
+      operationId: changeSeason
+      summary: Change season
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SeasonBaseDTO'
+      responses:
+        '200':
+          description: Changed
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      tags:
+        - Seasons
+      operationId: deleteSeason
+      summary: Delete season by seasonId
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Season deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/seasons:
+    get:
+      tags:
+        - Seasons
+      operationId: findSeasons
+      summary: Get all seasons for the organization without fields
+      responses:
+        '200':
+          description: List of seasons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SeasonBaseDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/seasons/full:
+    get:
+      tags:
+        - Seasons
+      operationId: findFullSeasons
+      summary: Get all seasons for the organization
+      responses:
+        '200':
+          description: List of seasons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SeasonWithFieldsDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/fields/{id}/contours:
+    get:
+      tags:
+        - Contours
+      operationId: findContours
+      summary: Get contours by fieldId
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Contours
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContourBaseDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/contour:
+    delete:
+      tags:
+        - Contours
+      operationId: deleteContour
+      summary: Delete contour by contourId
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Contour deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    put:
+      tags:
+        - Contours
+      operationId: changeContour
+      summary: Change contour
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateContourDTO'
+      responses:
+        '200':
+          description: Changed
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/fields/{id}/contour:
+    post:
+      tags:
+        - Contours
+      operationId: saveContour
+      summary: add a new contour to existing field
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContourBaseDTO'
+      responses:
+        '200':
+          description: Added to Field
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/seasons/{id}/field:
+    post:
+      tags:
+        - Fields
+      operationId: saveField
+      summary: Create a new field to existing season
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldDTO'
+      responses:
+        '200':
+          description: Field ID created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/seasons/{id}/fields:
+    get:
+      tags:
+        - Fields
+      operationId: findFields
+      summary: Get all fields by season ID for preview with last crop rotation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of fields by season with one element list with last crop rotation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FieldWithContoursAndCropRotationsDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/field:
+    delete:
+      tags:
+        - Fields
+      operationId: deleteField
+      summary: Delete field by fieldId
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Field deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    put:
+      tags:
+        - Fields
+      operationId: changeField
+      summary: Change field
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FieldBaseDTO'
+      responses:
+        '200':
+          description: Changed
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/internal/fields-service/fields/all-coordinates:
+    get:
+      tags:
+        - MeteoSlave
+      operationId: coordinatesForMeteoService
+      summary: Get coordinates for meteo service
+      responses:
+        '200':
+          description: List of fields by season with one element list with last crop rotation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MeteoResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+
+  /api/v2/fields-service/contours/{id}/crop-rotation:
+    post:
+      tags:
+        - CropRotations
+      operationId: saveCropRotation
+      summary: Create a new crop rotation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CropRotationDTO'
+      responses:
+        '200':
+          description: Crop rotation ID created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/contours/{id}/crop-rotations:
+    get:
+      tags:
+        - CropRotations
+      operationId: getCropRotations
+      summary: Get crop rotations by contourID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Crop rotation details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CropRotationDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/crop-rotation:
+    delete:
+      tags:
+        - CropRotations
+      operationId: deleteCropRotation
+      summary: Delete crop rotations by cropRotationId
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Crop rotation deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    put:
+      tags:
+        - CropRotations
+      operationId: changeCropRotation
+      summary: Change crop rotation
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CropRotationDTO'
+      responses:
+        '200':
+          description: Changed
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/contours/{id}/soil-composition:
+    post:
+      tags:
+        - SoilCompositions
+      operationId: saveSoilComposition
+      summary: Create a new soil composition to existing contour
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SoilCompositionDTO'
+      responses:
+        '200':
+          description: Soil composition ID created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IdDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/contours/{id}/soil-compositions:
+    get:
+      tags:
+        - SoilCompositions
+      operationId: getSoilCompositions
+      summary: Get soil compositions by contourID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Crop rotation details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SoilCompositionDTO'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /api/v2/fields-service/soil-composition:
+    put:
+      tags:
+        - SoilCompositions
+      operationId: changeSoilComposition
+      summary: Change SoilComposition
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SoilCompositionDTO'
+      responses:
+        '200':
+          description: Changed
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+    delete:
+      tags:
+        - SoilCompositions
+      operationId: deleteSoilComposition
+      summary: Delete SoilComposition by SoilCompositionId
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: SoilComposition deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+
+components:
+  schemas:
+
+    SeasonBaseDTO:
+      discriminator:
+        propertyName: season
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+      required:
+        - name
+        - startDate
+        - endDate
+
+    SeasonWithFieldsDTO:
+      allOf:
+        - $ref: '#/components/schemas/SeasonBaseDTO'
+        - type: object
+          properties:
+            fields:
+              type: array
+              items:
+                $ref: '#/components/schemas/FieldWithContoursAndCropRotationsDTO'
+          required:
+            - fields
+
+    FieldBaseDTO:
+      discriminator:
+        propertyName: field
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The field ID
+          readOnly: true
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The name of the field should be in the range from 1 to 20
+        description:
+          type: string
+          description: Description of the field
+      required:
+        - name
+
+    FieldDTO:
+      allOf:
+        - $ref: '#/components/schemas/FieldBaseDTO'
+        - type: object
+          properties:
+            contours:
+              type: array
+              items:
+                $ref: '#/components/schemas/ContourBaseDTO'
+      required:
+        - contours
+
+    FieldWithContoursAndCropRotationsDTO:
+      allOf:
+        - $ref: '#/components/schemas/FieldBaseDTO'
+        - type: object
+          properties:
+            contours:
+              type: array
+              items:
+                $ref: '#/components/schemas/ContourWithCropRotationsDTO'
+              description: A list of contours with crop rotations
+          required:
+            - contours
+
+    CoordinatesDTO:
+      type: object
+      properties:
+        longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+          description: Must be filled
+        latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+          description: Must be filled
+      required:
+        - longitude
+        - latitude
+
+    MeteoResponse:
+      allOf:
+        - $ref: '#/components/schemas/CoordinatesDTO'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+          required:
+            - id
+
+    UpdateContourDTO:
+      discriminator:
+        propertyName: contour
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Contour name
+        color:
+          type: string
+          pattern: "^([A-Fa-f0-9]{6})$"
+          description: The color must be written in HEX format
+      required:
+        - color
+        - name
+
+    ContourWithoutCoordinatesDTO:
+      discriminator:
+        propertyName: contour
+      allOf:
+        - $ref: '#/components/schemas/UpdateContourDTO'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              readOnly: true
+            squareArea:
+              type: string
+          required:
+            - color
+
+    ContourBaseDTO:
+      discriminator:
+        propertyName: contour
+      allOf:
+        - $ref: '#/components/schemas/ContourWithoutCoordinatesDTO'
+      type: object
+      properties:
+        color:
+          type: string
+          pattern: "^([A-Fa-f0-9]{6})$"
+          description: HEX color code
+        coordinates:
+          type: array
+          items:
+            $ref: '#/components/schemas/CoordinatesDTO'
+        squareArea:
+          type: string
+      required:
+        - color
+        - coordinates
+
+    ContourWithCropRotationsDTO:
+      allOf:
+        - $ref: '#/components/schemas/ContourWithoutCoordinatesDTO'
+        - type: object
+          properties:
+            cropRotations:
+              type: array
+              items:
+                $ref: '#/components/schemas/CropRotationDTO'
+              readOnly: true
+          required:
+            - color
+            - coordinates
+
+    CropRotationDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The crop rotation ID
+          readOnly: true
+        culture:
+          type: string
+          description: The culture being rotated
+          minLength: 1
+          maxLength: 50
+        cultivar:
+          type: string
+          description: The specific cultivar
+          minLength: 1
+          maxLength: 50
+        startDate:
+          type: string
+          format: date
+          description: Start date of the crop rotation
+        endDate:
+          type: string
+          format: date
+          description: End date of the crop rotation
+        description:
+          type: string
+          description: Description of the crop rotation
+      required:
+        - id
+        - startDate
+        - culture
+        - cultivar
+
+    SoilCompositionDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The soil composition ID
+          readOnly: true
+        ph:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The pH level of the soil
+        sampleDate:
+          type: string
+          format: date
+          description: The date when the soil sample was taken
+        organicMatter:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The organic matter content
+        mobileP:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The mobile phosphorus content
+        mobileK:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The mobile potassium content
+        mobileS:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The mobile sulfur content
+        nitrateN:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The nitrate nitrogen content
+        ammoniumN:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: The ammonium nitrogen content
+        hydrolyticAcidity:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Hydrolytic acidity
+        caExchange:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Calcium exchange content
+        mgExchange:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Magnesium exchange content
+        b:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Boron content
+        co:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Cobalt content
+        mn:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Manganese content
+        zn:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Zinc content
+        coordinates:
+          $ref: '#/components/schemas/CoordinatesDTO'
+      required:
+        - id
+        - sampleDate
+
+    IdDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Identification
+      required:
+        - id
+
+    ApiError:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+      required:
+        - title
+        - description
+
+    ExceptionBody:
+      type: object
+      properties:
+        errors:
+          description: Errors list
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ApiError'
+      required:
+        - errors
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExceptionBody'
+
+    InternalError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExceptionBody'

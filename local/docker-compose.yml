@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  database:
+    image: bitnami/postgresql:15
+    container_name: local-fields-db
+    environment:
+      POSTGRESQL_DATABASE: fields
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: postgres
+    ports:
+      - "5480:5432"
+    volumes:
+      - local-pgdbdata:/var/lib/postgresql/data/
+      - ../db-init:/docker-entrypoint-initdb.d
+
+volumes:
+  local-pgdbdata:
+
